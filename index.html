@@ -20,10 +20,18 @@
                 <label for="pass">Ingrese contraseña:</label>
                 <input  type="password" id="login-pass">
             </div>
-            <button type="submit" id="login-btn" class="btn login__btn-login">Iniciar sesión</button>
+            <button type="submit" class="btn login__btn">Iniciar sesión</button>
             <a href="./secciones/registro.html">Registrarme</a>
         </form>
     </div>
+
+    <div id="search-container" class="search-container">
+        <form id="search-form" class="search-form">
+            <input type="text" id="search-product" placeholder="producto a buscar...">
+            <button type="submit" class="btn search__btn">Buscar</button>
+        </form>
+    </div>
+
     <div class="productos-container" id="productos-container"></div>
 
     <script src="./javascript/index.js"></script>

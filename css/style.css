@@ -44,6 +44,11 @@ body {
     text-align: center;
 }
 
+.search-container {
+    text-align: center;
+    margin: 50px;
+}
+
 .productos-container {
     display: flex;
     flex-wrap: wrap;

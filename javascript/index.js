@@ -18,6 +18,9 @@ let domRegistroForm
 let domRegistroUser
 let domRegistroPass
 let domRegistroBtn
+let domSearch
+let domSearchForm
+let domSearchProduct
 let domProductos
 
 /* ================ CLASE USUARIOS ================ */
@@ -176,9 +179,9 @@ function desplegarProcedimientoAdmin(userLogin) {
     }
 }
 
-function desplegarProcedimientoCompra(userLogin) {
+function mostrarProductos(listProducts) {
     domProductos.innerHTML = ""  // Evita carga repetida de catálogo ante más de un despliegue de de compra
-    productos.forEach((producto) => domProductos.innerHTML += `
+    listProducts.forEach((producto) => domProductos.innerHTML += `
     <div class="producto-card">
         <img src="${producto.imagen}" alt="textoPrueba" class="producto-img">
         <div class= "producto__info">
@@ -188,8 +191,6 @@ function desplegarProcedimientoCompra(userLogin) {
         </div>
     </div>
     `)
-
-    console.log(domProductos.innerHTML)
 }
 
 // function desplegarProcedimientoCompra(userLogin) {
@@ -251,14 +252,15 @@ function domElementsInit() {
     domLoginForm = document.getElementById("login-form")
     domLoginUser = document.getElementById("login-user")
     domLoginPass = document.getElementById("login-pass")
-    domLoginBtn = document.getElementById("login-btn")
-    domBusqueda = document.getElementById("busqueda-container")
     domTextoABuscar = document.getElementById("texto-a-buscar")
     domBtnBusqueda = document.getElementById("btn-busqueda")
     domRegistroForm = document.getElementById("registro-form")
     domRegistroUser = document.getElementById("registro-user")
     domRegistroPass = document.getElementById("registro-pass")
     domRegistroLoginBtn = document.getElementById("registro-btn")
+    domSearch = document.getElementById("search-container")
+    domSearchForm = document.getElementById("search-form")
+    domSearchProduct = document.getElementById("search-product")
     domProductos = document.getElementById("productos-container")
 }
 
@@ -268,25 +270,39 @@ function obtenerLoginPorDOM() {
     domLoginForm?.addEventListener("submit", gestionarLogin) // Al cambiar de HTML hay que verificar si el evento existe, sino da error
 }
 
+
+function obtenerSearchProductPorDOM() {
+    domSearchForm?.addEventListener("submit",searchProduct) // Al cambiar de HTML hay que verificar si el evento existe, sino da error
+}
+
 function obtenerRegistroPorDOM() {
     domRegistroForm?.addEventListener("submit", gestionarAlta) // Al cambiar de HTML hay que verificar si el evento existe, sino da error
 }
+
+/* ================ DECLARACIÓN DE FUNCIONES ================ */
 
 function gestionarLogin(event) {
     event.preventDefault()
     let objectUser = new Usuario(domLoginUser.value, domLoginPass.value, false)
     domLoginForm.reset();
-    domLoginTitle.innerHTML = ""
+    domLoginTitle.innerText = ""
     if (validarLogin(objectUser.user, objectUser.password)) {
-        domLoginTitle.innerHTML += `Bienvenido ${objectUser.user}!`
-        domBusqueda = document.createElement("div")
-        domBusqueda.innerHTML = `
-        `
-        !objectUser.esAdmin() ? desplegarProcedimientoCompra(objectUser.user) : desplegarProcedimientoAdmin(objectUser.user)
+        domLoginTitle.innerText += `Bienvenido ${objectUser.user}!`
+        domSearch.hidden = false
+        !objectUser.esAdmin() ? mostrarProductos(productos) : desplegarProcedimientoAdmin(objectUser.user)
     }
     else {
         alert("Login fallido - Usuario o contraseña incorrectos")
+        domSearch.hidden = true
     }
+}
+
+function searchProduct(event) {
+    event.preventDefault()
+    let searchProd = domSearchProduct.value
+    let listProducts = productos.filter((prod) => prod.tipoProd.toLowerCase().includes(searchProd.toLowerCase()))
+    searchProd == "" ? alert("Debe ingresar un producto a buscar") : mostrarProductos(listProducts)
+    domSearchForm.reset()
 }
 
 function gestionarAlta(event) {
@@ -319,6 +335,7 @@ function main() {
     // GENERACIÓN DE USUARIOS
     usuarios.push(new Usuario("admin", "1234", true))
     usuarios.push(new Usuario("maxi", "maxizero", false))
+    usuarios.push(new Usuario("a", "a", false))
 
     while(true) {
         let repeat = false
@@ -373,11 +390,20 @@ productos.push(new Producto("Paleta", "BlackCrown", 60000, 10, "./img/paleta-bla
 productos.push(new Producto("Paleta", "ML10", 50000, 5, "./img/paleta-ml10.png"))
 productos.push(new Producto("Paleta", "Siux", 65000, 15, "./img/paleta-siux.png"))
 productos.push(new Producto("Paleta", "WingPro", 35000, 4, "./img/paleta-wing.png"))
+productos.push(new Producto("Bolso", "Adidas", 25000, 10, "./img/bolso-adidas.jpg"))
+productos.push(new Producto("Mochila", "Nike", 18000, 6, "./img/mochila-nike.jpg"))
+productos.push(new Producto("Muñequeras", "UnderArmour", 1000, 15, "./img/muniequera-under.jpg"))
+productos.push(new Producto("Tubo Pelotas", "Adidas", 2000, 8, "./img/pelotas-adidas.jpg"))
+productos.push(new Producto("Tubo Pelotas", "Prince", 1500, 4, "./img/pelotas-prince.jpg"))
+
 
 // GENERACIÓN DE USUARIOS
 usuarios.push(new Usuario("admin", "1234", true))
 usuarios.push(new Usuario("maxi", "maxizero", false))
+usuarios.push(new Usuario("a", "a", false))
 
 domElementsInit()
 obtenerLoginPorDOM()
+obtenerSearchProductPorDOM()
 obtenerRegistroPorDOM()
+

@@ -84,8 +84,8 @@ body {
     padding: 10px;
 }
 
-.agregar-carrito {
-    margin-top: 15px;
+.agregar-carrito, .modificar-prod, .eliminar-prod {
+    margin: 15px 5px 5px 5px;
     padding: 5px 10px;
     border-radius: 5px;
 }
